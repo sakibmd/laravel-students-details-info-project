@@ -7,7 +7,7 @@
 <h2>Add New Student</h2>
 <br>
     
-    <form action="{{ route('students.update', ['student' => $student->id]) }}" method="POST">
+    <form action="{{ route('students.update', ['student' => $student->id]) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="form-group">
@@ -23,6 +23,11 @@
         <div class="form-group">
             <label for="section">Section</label>
             <input type="text" name="section" placeholder="Enter Section" value="{{ old('section', $student->section) }}" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="section">Image</label>
+            <input type="file" name="image"  value="{{ old('image', $student->image) }}" class="form-control">
         </div>
 
         @if ($errors->any())

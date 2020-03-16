@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Student;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image;
+use Carbon\Carbon;
 
 class StudentController extends Controller
 {
@@ -14,7 +18,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return view('students.index', ['students'=> Student::paginate(5) ]);
+        return view('students.index', ['students'=> Student::orderBy('roll', 'ASC')->paginate(5) ]);
     }
 
     /**
@@ -35,13 +39,48 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        
+
+        $this->validate($request, [
             'name' => 'required|max:255',
             'roll' => 'required|unique:students',
-            'section' => 'required|max:1'
+            'section' => 'required|max:1',
+            'image' => 'required|mimes:jpeg,png,jpg'
+
         ]);
 
-        $student = Student::create($validatedData);
+         // Get Form Image
+        $image = $request->file('image');
+        $slug = str_slug($request->name);
+        if (isset($image)) {
+            
+            // Make Unique Name for Image 
+          $currentDate = Carbon::now()->toDateString();
+          $imagename = $slug.'-'.$currentDate.'-'.uniqid().'.'.$image->getClientOriginalExtension();
+ 
+ 
+         // Check Category Dir is exists
+             if (!Storage::disk('public')->exists('profile')) {
+                Storage::disk('public')->makeDirectory('profile');
+             }
+ 
+ 
+             // Resize Image for category and upload
+             $photo_sized = Image::make($image)->resize(1600,1100)->stream();
+             Storage::disk('public')->put('profile/'.$imagename,$photo_sized);
+ 
+  
+          }else{
+             $imagename = 'default.png';
+          } 
+
+          $student = new Student();
+          $student->name = $request->name;
+          $student->roll = $request->roll;
+          $student->slug = $slug;
+          $student->section = $request->section;
+          $student->image = $imagename;
+          $student->save();
         $request->session()->flash('status', 'Student Added successfully!');
         return redirect()->route('students.show', ['student' => $student->id]);
 
@@ -71,6 +110,7 @@ class StudentController extends Controller
         return view('students.edit', ['student'=> $student ]);
 
     }
+    
 
     /**
      * Update the specified resource in storage.
@@ -81,16 +121,52 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $student = Student::findOrFail($id);
-        $validatedData = $request->validate([
+        
+
+        $this->validate($request, [
             'name' => 'required|max:255',
-            'roll' => 'required',
-            'section' => 'required|max:1'
+            'name' => 'required',
+            'section' => 'required|max:1',
+            'image' => 'image'
         ]);
-        $student->fill($validatedData);
-        $student->save();
-        $request->session()->flash('status', 'Student Updated Successfully!');
-        return redirect()->route('students.show', ['student' => $student->id]);
+
+         // Get Form Image
+        $image = $request->file('image');
+        $slug = str_slug($request->name);
+        $student = Student::find($id);
+        if (isset($image)) {
+            
+            // Make Unique Name for Image 
+          $currentDate = Carbon::now()->toDateString();
+          $imagename = $slug.'-'.$currentDate.'-'.uniqid().'.'.$image->getClientOriginalExtension();
+ 
+ 
+         // Check Category Dir is exists
+             if (!Storage::disk('public')->exists('profile')) {
+                Storage::disk('public')->makeDirectory('profile');
+             }
+ 
+ 
+             // Resize Image for category and upload
+             $photo_sized = Image::make($image)->resize(1600,1100)->stream();
+             Storage::disk('public')->put('profile/'.$imagename,$photo_sized);
+ 
+  
+          }else{
+                $imagename = $student->image;
+          } 
+
+          $student->name = $request->name;
+          $student->slug = $slug;
+          $student->roll = $request->roll;
+          $student->section = $request->section;
+          $student->image = $imagename;
+          $student->save();
+
+          $request->session()->flash('status', 'Student Updated Successfully!');
+          return redirect()->route('students.show', ['student' => $student->id]);
+  
+
 
     }
 
