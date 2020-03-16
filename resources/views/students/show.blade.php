@@ -3,7 +3,8 @@
 
 @section('content')
 
-<h2>Student Details</h2>
+<div class="container" >
+    <br><br>
     <br>
     <div class="container">
         <div class="row">
@@ -26,8 +27,7 @@
                         @endif
                       <div class="row">
                           <div class="col-sm-6"><a class="btn btn-info btn-block m-2" href="{{ route('students.edit', $student->id) }}">Edit</a></div>
-                          <div class="col-sm-6"><a class="btn btn-primary btn-block m-2" href="{{ route('students.index') }}">Back</a></div>
-
+                          <div class="col-sm-6"><a class="btn btn-danger btn-block m-2" href="{{ route('students.index') }}">Back</a></div>
                     </div>
                 </div> 
                   </div>
@@ -35,5 +35,6 @@
             <div class="col-md-4"></div>
         </div>
     </div>
+</div>
 
 @endsection

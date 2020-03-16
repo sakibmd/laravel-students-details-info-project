@@ -3,12 +3,16 @@
 
 @section('content')
 
-<h2>Student List</h2>
+    <div class="container">
+        <h2>Student List</h2>
 <br><br>
- <table class="table table-dark" width="400px">
+<a href="{{ route('students.create') }}" class="btn btn-info">Add New Student</a>
+
+ <table class="table table-dark mt-2" width="400px">
     <thead>
       <tr>
         <th scope="col">Name</th>
+        <th scope="col">Roll</th>
         <th scope="col">Batch</th>
       </tr>
     </thead>
@@ -48,6 +52,7 @@
       No Data Found
 
   @endforelse --}}
+    </div>
 
 @endsection
 

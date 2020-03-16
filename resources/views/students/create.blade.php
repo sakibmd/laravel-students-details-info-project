@@ -3,10 +3,10 @@
 
 @section('content')
 
-
-<h2>Add New Student</h2>
+<div class="container">
+    <br><br><br>
+    <h2 class="mt-3">Add New Student</h2>
 <br>
-    
     <form action="{{ route('students.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
@@ -24,8 +24,10 @@
             <input type="text" name="section" placeholder="Enter Section" value="{{ old('section') }}" class="form-control">
         </div>
 
+        
+
         <div class="form-group">
-            <label for="section">Image</label>
+            <label for="section">Select An Image</label>
             <input type="file" name="image"  value="{{ old('image') }}" >
         </div>
 
@@ -40,7 +42,13 @@
         @endif
 
 
+        
+        <a href="{{ route('home') }}" class="btn btn-danger">Back</a>
         <button type="submit" class="btn btn-info">Create</button>
     </form>
 
+
+    
+</div>
+<br><br><br>
 @endsection

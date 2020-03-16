@@ -4,8 +4,10 @@
 @section('content')
 
 
-<h2>Add New Student</h2>
-<br>
+<div class="container">
+    <br><br><br>
+    <h2>Edit Student</h2>
+    <br>
     
     <form action="{{ route('students.update', ['student' => $student->id]) }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -17,7 +19,7 @@
 
         <div class="form-group">
             <label for="roll">Roll</label>
-            <input type="text" name="roll" placeholder="Enter Roll" value="{{ old('roll', $student->roll) }}" class="form-control">
+            <input type="text" name="roll" placeholder="Enter Roll" value="{{ old('roll', $student->roll) }}" class="form-control" disabled>
         </div>
 
         <div class="form-group">
@@ -40,8 +42,13 @@
             </div>
         @endif
 
-
-        <button type="submit" class="btn btn-info">Update</button>
+        <div class="row">
+            <a class="btn btn-danger mr-2" href="{{ route('students.index') }}">Back</a>
+            <button type="submit" class="btn btn-info">Update</button>
+        </div>
+        
     </form>
+
+</div>
 
 @endsection

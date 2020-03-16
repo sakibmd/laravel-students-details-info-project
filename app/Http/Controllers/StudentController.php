@@ -125,7 +125,6 @@ class StudentController extends Controller
 
         $this->validate($request, [
             'name' => 'required|max:255',
-            'name' => 'required',
             'section' => 'required|max:1',
             'image' => 'image'
         ]);
@@ -158,7 +157,6 @@ class StudentController extends Controller
 
           $student->name = $request->name;
           $student->slug = $slug;
-          $student->roll = $request->roll;
           $student->section = $request->section;
           $student->image = $imagename;
           $student->save();
